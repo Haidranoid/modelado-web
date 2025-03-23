@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráfica de Pruebita</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h2>Gráfica de Datos desde MySQL</h2>
+    <canvas id="grafica"></canvas>
+
+    <script>
+        async function cargarDatos() {
+            try {
+                const response = await fetch('/data');  // Llamar al backend
+                const data = await response.json();
+
+                const ctx = document.getElementById('grafica').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',  // Tipo de gráfica (barras)
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Numerito',
+                            data: data.values,
+                            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error("Error al obtener los datos:", error);
+            }
+        }
+
+        window.onload = cargarDatos;
+    </script>
+</body>
+</html>
