@@ -3,8 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <title>Inicio</title>
+    <script>
+    async function enviarDatos() {
+      const x = document.getElementById('x').value;
+      const y = document.getElementById('y').value;
+
+      const response = await fetch('/data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ x: x, y: y })
+      });
+
+      const resultado = await response.json();
+      const resultadoDiv = document.getElementById('resultado');
+
+      if (resultado.error) {
+        resultadoDiv.innerHTML = `<p style="color:red;">Error: ${resultado.error}</p>`;
+      } else {
+        resultadoDiv.innerHTML = `
+          <h3>Resultados</h3>
+          <p><strong>x:</strong> ${resultado.x}</p>
+          <p><strong>y:</strong> ${resultado.y}</p>
+          <p><strong>Pesos:</strong> ${JSON.stringify(resultado.pesos)}</p>
+          <p><strong>Tethas:</strong> ${JSON.stringify(resultado.tethas)}</p>
+          <p><strong>Resultado de XOR:</strong> ${JSON.stringify(resultado.result)}</p>
+        `;
+      }
+    }
+  </script>
 </head>
 <body>
+   <h1>Red XOR - Entrada y Resultados</h1>
+
+  <label for="x">Valor de X:</label>
+  <input type="number" id="x" name="x"><br><br>
+
+  <label for="y">Valor de Y:</label>
+  <input type="number" id="y" name="y"><br><br>
+
+  <button onclick="enviarDatos()">Enviar al backend</button>
+
+  <div id="resultado"></div>
+<hr>
     <h2>Bienvenido, {{ usuario }}</h2>
     <p>Estás en la página de inicio.</p>
     <a href="{{ url_for('logout') }}">Cerrar sesión</a>
